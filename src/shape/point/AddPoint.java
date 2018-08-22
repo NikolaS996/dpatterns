@@ -5,22 +5,23 @@ import shape.Command;
 
 public class AddPoint implements Command {
 
-	private DrawingModel model;
+	private DrawingModel drawingModel;
 	private Point point;
 
-	public AddPoint(DrawingModel model, Point point) {
-		this.model=model;
-		this.point=point;	
+	public AddPoint(DrawingModel drawingModel, Point point) {
+		this.drawingModel = drawingModel;
+		this.point = point;
 	}
 
 	@Override
 	public void execute() {
-		model.addShape(point);
+		drawingModel.addShape(point);
 
 	}
 
 	@Override
 	public void unexecute() {
-		model.removeShape(point);
+		drawingModel.removeShape(point);
+
 	}
 }

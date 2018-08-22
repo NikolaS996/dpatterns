@@ -10,10 +10,10 @@ public class DrawingApp {
 	public static void main(String[] args) {			
 		DrawingFrame drawingFrame = new DrawingFrame();
 		DrawingModel drawingModel = new DrawingModel();
-		DrawingController drawingControler = new DrawingController(drawingModel,drawingFrame);
+		DrawingController drawingController = new DrawingController(drawingModel,drawingFrame);
 
 		//frame obavjestavamo ko mu je kontroler
-		drawingFrame.setDrawingController(drawingControler);
+		drawingFrame.setDrawingController(drawingController);
 		//kazemo viewu ko je njegov model
 		drawingFrame.getDrawingView().setDrawingmodel(drawingModel);
 

@@ -2,107 +2,115 @@ package frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JFrame;
 
 import mvc.controller.ButtonController;
 import mvc.controller.DrawingController;
-import mvc.view.DrawingView;
 import mvc.view.ButtonView;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import mvc.view.DrawingView;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+
 
 public class DrawingFrame extends JFrame {
-
-	private DrawingView drawingView=new DrawingView(); //app ce podrazumjevati da je view instanciran i da ga imamo ... panel nam je sad view
+	private DrawingView drawingView=new DrawingView();
 	private DrawingController drawingController;
 	private ButtonView buttonView=new ButtonView();
 	private ButtonController buttonController;
-
+	
 	public DrawingFrame() {
 		setSize(640,480);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
-
-
+		
 		getContentPane().setLayout(new BorderLayout(0, 0));
-
 		getContentPane().add(drawingView, BorderLayout.CENTER);
 		drawingView.setBackground(Color.BLACK);
 		drawingView.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if(!buttonView.getTglbtnSelected().isSelected()) {
-					drawingController.addPoint(e);
+					buttonView.getBtnDelete().setEnabled(false);
+					buttonView.getComboBox_Shapes().setEnabled(true);
+					drawingController.handleMousePressed(e);
 				} else {
+					buttonView.getBtnDelete().setEnabled(true);
+					buttonView.getComboBox_Shapes().setEnabled(false);
 					buttonController.selectedClick(e.getX(),e.getY());
 				}
+				
 			}
-		});
-		buttonView.getBtnDelete().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(!buttonView.getTglbtnSelected().isSelected()) {
+					drawingController.drawShape(e);
+				}
+				
+			}
+			
+			
+		});
+		
+		drawingView.addMouseMotionListener(new MouseMotionAdapter() {
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				drawingController.handleMouseDragged(e);
+				super.mouseDragged(e);
+			}
+		
+		});
+	
 		getContentPane().add(buttonView, BorderLayout.NORTH);
+		
 		buttonView.getBtnUndo().addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				buttonController.undoClick();
 			}
 		});
+		
 		buttonView.getBtnRedo().addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				buttonController.redoClick();
+				
 			}
 		});
-
+		
 		buttonView.getTglbtnSelected().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if(buttonView.getTglbtnSelected().isSelected()) {
 					buttonController.unselectArray();
-				}
+					buttonView.getComboBox_Shapes().setEnabled(true);
+				} else
+				buttonView.getComboBox_Shapes().setEnabled(false);
 			}
 		});
-
-		buttonView.getComboBox_Shapes().addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-				switch (buttonView.getComboBox_Shapes().getSelectedItem().toString()) {
-				case "Point":
-
-					break;
-				case "Line":
-
-					break;
-				default:
-
-					break;
-				}
-
-			}
-		});
-
+		
+		
 		buttonView.getBtnDelete().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				buttonController.deleteShape();
 			}
 		});
-
+		
 		buttonView.getBtnUpdate().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				buttonController.updateShape();
 			}
 		});
-
+		
+		
+	
+		
 	}
-
-
-	//View mozemo da direktno instanciramo iz Frama
+	
 	public DrawingView getDrawingView() {
 		return drawingView;
 	}
@@ -110,16 +118,14 @@ public class DrawingFrame extends JFrame {
 		this.drawingView = drawingView;
 	}
 
-
 	public DrawingController getDrawingController() {
 		return drawingController;
 	}
 
-
 	public void setDrawingController(DrawingController drawingController) {
 		this.drawingController = drawingController;
 	}
-
+	
 	public ButtonController getButtonController() {
 		return buttonController;
 	}
@@ -127,4 +133,9 @@ public class DrawingFrame extends JFrame {
 	public void setButtonController(ButtonController buttonController) {
 		this.buttonController = buttonController;
 	}
+
+	public ButtonView getButtonView() {
+		return buttonView;
+	}
+	
 }

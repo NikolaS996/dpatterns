@@ -20,7 +20,9 @@ import java.awt.event.MouseEvent;
 public class AddSquareDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtSideLength;
+	public JTextField txtSideLength;
+	
+	public boolean accepted = false;
 
 	public AddSquareDialog() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -69,12 +71,14 @@ public class AddSquareDialog extends JDialog {
 						} else {
 							try {
 								int sideLength = Integer.parseInt(txtSideLength.getText());
-								if (sideLength < 0) {
+								if (sideLength <= 0) {
 									JOptionPane.showMessageDialog(null, "Length of side must be greater then zero",
 											"Error", JOptionPane.ERROR_MESSAGE);
 								} else {
-
+									accepted = true;
 								}
+								
+								setVisible(false);
 							} catch (NumberFormatException ex) {
 								JOptionPane.showMessageDialog(null, "Only numbers are allowed!", "Error",
 										JOptionPane.ERROR_MESSAGE);
@@ -99,6 +103,7 @@ public class AddSquareDialog extends JDialog {
 								"Izaberite jednu od opcija:",
 								JOptionPane.INFORMATION_MESSAGE);
 						if (answer == JOptionPane.OK_OPTION) {
+							accepted = false;
 							setVisible(false);
 							dispose();
 						}
